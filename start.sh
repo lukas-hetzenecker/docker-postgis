@@ -17,6 +17,10 @@ if [ ! "$(ls -A $DATADIR)" ]; then
   chown -R postgres $DATADIR
   su postgres sh -c "$INITDB $DATADIR"
   su postgres sh -c "$POSTGRES --single -D $DATADIR -c config_file=$CONF" <<< "CREATE USER $USERNAME WITH SUPERUSER PASSWORD '$PASS';"
+  su postgres sh -c "$POSTGRES --single -D $DATADIR -c config_file=$CONF" <<< "CREATE EXTENSION postgis;"
+  su postgres sh -c "$POSTGRES --single -D $DATADIR -c config_file=$CONF" <<< "CREATE EXTENSION postgis_topology;"
+  su postgres sh -c "$POSTGRES --single -D $DATADIR -c config_file=$CONF" <<< "CREATE EXTENSION fuzzystrmatch;"
+  su postgres sh -c "$POSTGRES --single -D $DATADIR -c config_file=$CONF" <<< "CREATE EXTENSION postgis_tiger_geocoder;"
 fi
 
 trap "echo \"Sending SIGTERM to postgres\"; killall -s SIGTERM postgres" SIGTERM
